@@ -9,23 +9,24 @@
 # NOTE: must be run under sudo
 
 config:
-	cp files/* /private/tftpboot
-	chmod 777 /private/tftpboot
-	chmod 777 /private/tftpboot/*
+	-sudo cp files/* /private/tftpboot
+	-sudo chmod 777 /private/tftpboot
+	-sudo chmod 777 /private/tftpboot/*
 
 start: config
-	launchctl load -F /System/Library/LaunchDaemons/tftp.plist
-	launchctl start com.apple.tftpd
+	-sudo launchctl load -F /System/Library/LaunchDaemons/tftp.plist
+	-sudo launchctl start com.apple.tftpd
 
 stop: clean
-	launchctl stop com.apple.tftpd
-	launchctl unload -F /System/Library/LaunchDaemons/tftp.plist
+	-sudo launchctl stop com.apple.tftpd
+	-sudo launchctl unload -F /System/Library/LaunchDaemons/tftp.plist
 
 clean:
-	rm /private/tftpboot/*
+	-sudo rm /private/tftpboot/*
 
 client:
 	tftp localhost 69
 
+IF := en0
 dump:
-	tcpdump -Ani en0 port 69 and udp
+	sudo tcpdump -Ani ${IF} port 69 and udp
